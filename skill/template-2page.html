@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{COMPANY_NAME}} - MEDDPIC Analysis</title>
+    <style>
+        @page { size: A4; margin: 12mm; }
+        @media print { body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 9px; line-height: 1.3; color: #1a1a1a; }
+
+        .page { width: 210mm; min-height: 297mm; padding: 8mm; page-break-after: always; background: white; }
+        .page:last-child { page-break-after: auto; }
+
+        /* Header */
+        .header { background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); color: white; padding: 12px 15px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 16px; }
+        .header .score-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 4px; text-align: center; }
+        .header .score-badge .number { font-size: 20px; font-weight: 700; }
+        .header .score-badge .label { font-size: 8px; opacity: 0.8; }
+
+        /* Summary */
+        .summary-box { background: #f8f9fa; padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 9px; border-left: 3px solid #1e3a5f; }
+
+        /* Section Headers */
+        .section { margin-bottom: 10px; }
+        .section-header { font-size: 11px; font-weight: 600; color: #1e3a5f; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #e9ecef; }
+
+        /* Scorecard Grid */
+        .scorecard { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-bottom: 10px; }
+        .score-item { padding: 6px 4px; text-align: center; border-radius: 4px; font-size: 8px; }
+        .score-item.red { background: #fee2e2; border: 1px solid #fca5a5; }
+        .score-item.yellow { background: #fef3c7; border: 1px solid #fcd34d; }
+        .score-item.green { background: #d1fae5; border: 1px solid #6ee7b7; }
+        .score-item .element { font-weight: 600; font-size: 9px; }
+        .score-item .score { font-size: 14px; font-weight: 700; }
+
+        /* Compact Matrix */
+        .matrix { width: 100%; border-collapse: collapse; font-size: 8px; margin-bottom: 10px; }
+        .matrix th { background: #1e3a5f; color: white; padding: 5px 4px; text-align: left; font-weight: 500; font-size: 7px; }
+        .matrix td { padding: 5px 4px; border-bottom: 1px solid #e9ecef; vertical-align: top; }
+        .matrix ul { margin: 0; padding-left: 10px; }
+        .matrix li { margin-bottom: 1px; }
+        .urgency-high { color: #dc2626; font-weight: 600; }
+        .urgency-medium-high { color: #ea580c; font-weight: 600; }
+        .urgency-medium { color: #ca8a04; }
+        .urgency-low { color: #6b7280; }
+        .check { color: #16a34a; }
+        .cross { color: #dc2626; }
+        .partial { color: #ca8a04; }
+
+        /* Gap Cards */
+        .gap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .gap-card { background: #f8f9fa; padding: 8px; border-radius: 4px; font-size: 8px; }
+        .gap-card.red { border-left: 3px solid #dc2626; }
+        .gap-card.yellow { border-left: 3px solid #ca8a04; }
+        .gap-card.green { border-left: 3px solid #16a34a; }
+        .gap-card h4 { font-size: 9px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .gap-card .gap-label { font-weight: 600; color: #666; font-size: 7px; margin-top: 4px; }
+        .gap-card .gap-text { color: #444; }
+
+        /* Actions Box */
+        .actions-box { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 10px 12px; border-radius: 6px; }
+        .actions-box h3 { font-size: 10px; margin-bottom: 6px; }
+        .actions-box .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .actions-box h4 { font-size: 8px; opacity: 0.9; margin-bottom: 4px; text-transform: uppercase; }
+        .actions-box ul { margin: 0; padding-left: 12px; font-size: 8px; }
+        .actions-box li { margin-bottom: 2px; }
+
+        /* Page 2 - Participant Analysis */
+        .participant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .participant-card { background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #1e3a5f; }
+        .participant-card h4 { font-size: 10px; margin-bottom: 2px; }
+        .participant-card .role { font-size: 8px; color: #666; margin-bottom: 6px; }
+        .participant-card .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .participant-card .detail-item h5 { font-size: 7px; text-transform: uppercase; color: #666; margin-bottom: 2px; }
+        .participant-card .detail-item p { font-size: 8px; }
+
+        /* Key Insight Box */
+        .insight-box { background: #fef3c7; border: 1px solid #fcd34d; padding: 10px 12px; border-radius: 6px; margin-top: 10px; }
+        .insight-box h3 { font-size: 10px; color: #92400e; margin-bottom: 4px; }
+        .insight-box p { font-size: 9px; color: #78350f; }
+
+        /* Footer */
+        .footer { text-align: center; font-size: 7px; color: #9ca3af; margin-top: 8px; padding-top: 6px; border-top: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <h1>{{COMPANY_NAME}}</h1>
+                <div style="font-size: 9px; opacity: 0.9;">MEDDPIC Deal Analysis</div>
+            </div>
+            <div class="score-badge">
+                <div class="number">{{TOTAL_SCORE}}/80</div>
+                <div class="label">{{SCORE_PERCENTAGE}}% | {{DEAL_HEALTH_LABEL}}</div>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            {{EXECUTIVE_SUMMARY}}
+        </div>
+
+        <div class="section">
+            <h2 class="section-header">Scorecard</h2>
+            <div class="scorecard">
+                {{SCORECARD_ITEMS}}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-header">Stakeholder Matrix</h2>
+            <table class="matrix">
+                <thead>
+                    <tr>
+                        <th style="width:12%">Name</th>
+                        <th style="width:12%">Role</th>
+                        <th style="width:8%">Urgency</th>
+                        <th style="width:22%">Pain Points</th>
+                        <th style="width:18%">Value Interest</th>
+                        <th style="width:8%">Clear?</th>
+                        <th style="width:20%">Blocker</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{STAKEHOLDER_ROWS}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-header">Gap Analysis</h2>
+            <div class="gap-grid">
+                {{GAP_CARDS}}
+            </div>
+        </div>
+
+        <div class="footer">Generated {{DATE}} | MEDDPIC Analysis</div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page">
+        <div class="header" style="padding: 8px 15px;">
+            <h1 style="font-size: 14px;">{{COMPANY_NAME}} - Actions & Analysis</h1>
+        </div>
+
+        <div class="actions-box" style="margin-bottom: 10px;">
+            <h3>Priority Actions</h3>
+            <div class="cols">
+                {{ACTIONS_CONTENT}}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-header">Participant Analysis</h2>
+            <div class="participant-grid">
+                {{PARTICIPANT_CARDS}}
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <h3>Key Insight</h3>
+            <p>{{KEY_INSIGHT}}</p>
+        </div>
+
+        <div class="footer">Generated {{DATE}} | Page 2 of 2</div>
+    </div>
+</body>
+</html>
