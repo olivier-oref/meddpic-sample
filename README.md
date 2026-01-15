@@ -4,7 +4,7 @@ A Claude Code skill for analyzing sales call transcripts using the MEDDPIC quali
 
 ## Live Demo
 
-View a sample anonymized analysis: **[https://olivier-oref.github.io/meddppicc-sample/](https://olivier-oref.github.io/meddppicc-sample/)**
+View a sample anonymized analysis: **[https://olivier-oref.github.io/meddpic-sample/](https://olivier-oref.github.io/meddpic-sample/)**
 
 ## What is MEDDPIC?
 
